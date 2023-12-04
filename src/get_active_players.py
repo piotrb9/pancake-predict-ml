@@ -15,7 +15,7 @@ def get_txs(endblock: int) -> list:
     :return: List of dicts with txs
     """
     url = f"https://api.bscscan.com/api?module=account&action=txlist&address=" \
-          f"0x0E3A8078EDD2021dadcdE733C6b4a86E51EE8f07&startblock=0&endblock={endblock}&page=0&offset=10000&sort=" \
+          f"0x0E3A8078EDD2021dadcdE733C6b4a86E51EE8f07&startblock=0&endblock={endblock}&page=1&offset=10000&sort=" \
           f"desc&apikey={bscscan_api_key}"
 
     response = requests.request("GET", url)
@@ -24,7 +24,7 @@ def get_txs(endblock: int) -> list:
     txs = txs['result']
 
     txs_list = []
-    if txs is None:
+    if txs is None:fix
         return []
 
     for tx in txs:
