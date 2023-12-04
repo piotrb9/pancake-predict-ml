@@ -24,7 +24,7 @@ def get_txs(endblock: int) -> list:
     txs = txs['result']
 
     txs_list = []
-    if txs is None:fix
+    if txs is None:
         return []
 
     for tx in txs:
