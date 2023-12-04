@@ -1,0 +1,10 @@
+/.jupyter/
+/data/.ipynb_checkpoints/
+/data/api_keys.ini
+/notebooks/.ipynb_checkpoints/
+/src/temp.py
+/data/
+.env
+/cache/
+*.xml
+/.idea/
