@@ -1,8 +1,10 @@
 """Download players bets hisory using bscscan api"""
 import configparser
 import json
+import os
 import requests
 from web3_input_decoder import decode_function
+import concurrent.futures
 
 api_config = configparser.ConfigParser()
 api_config.read('../data/api_keys.ini')
@@ -88,17 +90,39 @@ def decode_input(transaction: dict, abi: list) -> list:
     return decoded_input
 
 
-if __name__ == "__main__":
-    addr = ["0x79fa50f8f28127f65c910ed049317caf97fe7607"]
+def main_concurrent(addresses: list, players_data_folder: str, start_block: int = 0, end_block: int = 99999999) -> None:
+    """
+    Download data for multiple addresses concurrently
+    :param addresses: List of addresses
+    :param players_data_folder: Directory to save the data
+    :param start_block: Block number to start searching from (use 0 to search from the beginning), optional
+    :param end_block: Block number to end searching at (use 99999999 to search until the end), optional
+    :return: None
+    """
+    def simple_address_function(address: str) -> None:
+        """
+        Simple function to download data for a single address and save it to a .json file
+        :param address: Address to download data for
+        :return: None
+        """
+        print(f"Downloading data of {address}")
+        bets = get_bets(address, start_block, end_block)
 
-    block_from_get_bets = 22394098
-    block_to_get_bets = 25624791
+        with open(players_data_folder + address + '.json', 'w') as file:
+            json.dump(bets, file)
 
-    for x in addr:
-        gb = get_bets(x, block_from_get_bets, block_to_get_bets)
+        print(f"Done with {address}")
 
-    import pandas as pd
-    df = pd.DataFrame(gb)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        futures = []
 
-    print(df)
-    # main_concurrent(addr, '../data/players_data')
+        # Check the players_data_folder for .json files already existing and remove them from the addresses list
+        current_files = os.listdir(players_data_folder)
+        current_files = [file.replace(".json", "") for file in current_files]
+        addresses = [address for address in addresses if address not in current_files]
+
+        print(f"Downloading data for {len(addresses)} addresses")
+
+        for address in addresses:
+            futures.append(executor.submit(simple_address_function, address=address))
+
