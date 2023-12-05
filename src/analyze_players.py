@@ -15,10 +15,6 @@ def load_player_data(json_file: str) -> pd.DataFrame:
     :param json_file: Path to json file
     :return: Dataframe with player data
     """
-    # basePath = os.path.dirname(os.path.abspath(__file__))
-    #
-    # path = basePath + f'\\{players_data_folder}\\' + json_file
-    # print(f"Loading {path}")
     df = pd.read_json(json_file)
 
     # Delete transactions with error
@@ -67,10 +63,6 @@ def analyze_player(player_df: pd.DataFrame, rounds_df: pd.DataFrame, check_from:
 
     print(f"There are {number_of_records_before_cropping} player bets in total,"
           f" {number_of_records_before_cropping - number_of_records_after_cropping} bets were not in the rounds data")
-    # print("--------- timeline df after cropping -------------")
-    # print(timeline_df)
-    #
-    # print(player_df)
 
     # Rename columns before merging the dfs
     player_df = player_df.rename(columns={'functionName': 'player_bet'})
@@ -79,10 +71,6 @@ def analyze_player(player_df: pd.DataFrame, rounds_df: pd.DataFrame, check_from:
 
     # Check from (unix timestamp)
     if check_from:
-        # try:
-        #     final_df = final_df[final_df['closeAt'] >= float(check_from)]
-        #     print(f"Checking only transactions after {datetime.datetime.utcfromtimestamp(int(check_from)).strftime('%Y-%m-%d %H:%M:%S')}")
-        # except:
         final_df = final_df[final_df['close_timestamp'] >= check_from]
         print(f"Checking only transactions after"
               f" {datetime.datetime.utcfromtimestamp(check_from).strftime('%Y-%m-%d %H:%M:%S')}")
@@ -104,9 +92,6 @@ def create_final_csv_files(player_data_dir: str, final_data_dir: str, rounds_df:
     player_data_files = [os.path.join(player_data_dir, f) for f in os.listdir(player_data_dir) if
                          os.path.isfile(os.path.join(player_data_dir, f))]
 
-    # df_player_bet = rounds_df.copy()
-    # df_bet_amount = rounds_df.copy()
-
     merged_player_bet = rounds_df.copy()
     merged_bet_amount = rounds_df.copy()
 
@@ -116,10 +101,6 @@ def create_final_csv_files(player_data_dir: str, final_data_dir: str, rounds_df:
         calculated_player_df = analyze_player(player_df, rounds_df, check_from)
 
         filename = os.path.basename(player_data_file).replace('.json', '')
-
-        # calculated_player_df = calculated_player_df.rename(columns={'player_bet': filename})
-
-        # calculated_player_df = calculated_player_df[['epoch', filename]]
 
         # Merge df_player_bet and df_bet_amount with calculated_player_df on epoch
         merged_player_bet = pd.merge(merged_player_bet, calculated_player_df[['epoch', 'player_bet']], on='epoch', how='left')
