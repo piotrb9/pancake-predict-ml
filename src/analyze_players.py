@@ -5,6 +5,11 @@ import pandas as pd
 
 
 def load_player_data(json_file: str) -> pd.DataFrame:
+    """
+    Load player data from json file
+    :param json_file: Path to json file
+    :return: Dataframe with player data
+    """
     # basePath = os.path.dirname(os.path.abspath(__file__))
     #
     # path = basePath + f'\\{players_data_folder}\\' + json_file
@@ -25,6 +30,11 @@ def load_player_data(json_file: str) -> pd.DataFrame:
 
 
 def load_rounds_data(path: str) -> pd.DataFrame:
+    """
+    Load rounds data from csv file
+    :param path: Path to csv file
+    :return: Dataframe with rounds data
+    """
     df = pd.read_csv(path, delimiter='\t')
     print(f"There are {df[df.columns[0]].count()} records in rounds data total and"
           f" {df[df['position'].isnull()].shape[0]} records with unspecified position (NaN), probably failed")
@@ -34,6 +44,13 @@ def load_rounds_data(path: str) -> pd.DataFrame:
 
 
 def analyze_player(player_df: pd.DataFrame, rounds_df: pd.DataFrame, check_from: int = None) -> pd.DataFrame:
+    """
+    Analyze player bets
+    :param player_df: Dataframe with player bets
+    :param rounds_df: Dataframe with rounds data
+    :param check_from: Check only transactions after this timestamp (optional)
+    :return: Dataframe with player bets and rounds data merged
+    """
     # Select only needed timeline rows
     rounds_df = rounds_df[rounds_df['epoch'].isin(player_df['epoch'])]
 
@@ -70,6 +87,14 @@ def analyze_player(player_df: pd.DataFrame, rounds_df: pd.DataFrame, check_from:
 
 def create_final_csv_files(player_data_dir: str, final_data_dir: str, rounds_df: pd.DataFrame,
                            check_from: int = None) -> None:
+    """
+    Create final csv file with player bets and rounds data merged
+    :param final_data_dir: Directory to save the final CSV files
+    :param player_data_dir: Directory with player data JSON files
+    :param rounds_df: Dataframe with rounds data
+    :param check_from: Check only transactions after this timestamp (optional)
+    :return: None
+    """
     # Get all player data files with their full path
     player_data_files = [os.path.join(player_data_dir, f) for f in os.listdir(player_data_dir) if
                          os.path.isfile(os.path.join(player_data_dir, f))]
