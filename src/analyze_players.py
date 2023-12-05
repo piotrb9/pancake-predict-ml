@@ -3,6 +3,11 @@ import datetime
 import os
 import pandas as pd
 
+import simplejson
+
+# workaround to load big numbers (?)
+pd.io.json._json.loads = lambda s, *a, **kw: simplejson.loads(s)
+
 
 def load_player_data(json_file: str) -> pd.DataFrame:
     """
