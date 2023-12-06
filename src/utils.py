@@ -14,8 +14,8 @@ def load_players_data(timestamp_from: int, timestamp_to: int,
     :param data_dir: Directory where the data is stored, default is '../data/merged_data/'
     :return: Dataframes with player bets and bet sizes
     """
-    player_bet_df = pd.read_csv(f'{data_dir}final_player_bet.csv')
-    bet_amount_df = pd.read_csv(f'{data_dir}final_bet_amount.csv')
+    player_bet_df = pd.read_csv(f'{data_dir}final_player_bet.csv', low_memory=False)
+    bet_amount_df = pd.read_csv(f'{data_dir}final_bet_amount.csv', low_memory=False)
 
     # Filter the dataframes by timestamp
     player_bet_df = player_bet_df[(player_bet_df['start_timestamp'] >= timestamp_from) &
