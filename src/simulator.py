@@ -19,6 +19,7 @@ def simulate(data_df: pd.DataFrame, prediction: pd.Series, bet_size: pd.Series, 
     :return: Dataframe with the simulation results (in CAKE tokens)
     """
 
+    data_df = data_df.copy()  # To avoid SettingWithCopyWarning
     data_df['prediction'] = prediction
     data_df['bet_size'] = bet_size
 
@@ -69,7 +70,6 @@ if __name__ == "__main__":
 
     print(f"{time_from_training}")
 
-
     player_bet_df, bet_amount_df = load_players_data(time_from_training, time_to_training)
 
     # Get all wallets from player_bet_df
@@ -77,7 +77,6 @@ if __name__ == "__main__":
     not_players_list = ['epoch', 'start_timestamp', 'lock_timestamp', 'close_timestamp', 'lock_price', 'close_price',
                         'total_amount', 'bull_amount', 'bear_amount', 'position']
     wallets = [wallet for wallet in wallets if wallet not in not_players_list]
-
 
     for wallet in wallets:
         wallet_bets = player_bet_df[wallet]
