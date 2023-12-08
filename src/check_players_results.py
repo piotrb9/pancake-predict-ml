@@ -5,38 +5,27 @@ from simulator import simulate
 
 
 def get_players_metrics(player_bet_df: pd.DataFrame, bet_amount_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Get the win ratio of each player
+    :param player_bet_df: Dataframe with player bets
+    :param bet_amount_df: Dataframe with player bet size
+    :return: Dataframe with players metrics
+    """
+
     players_metrics_list = []
 
     # Get the unique players
     not_players_list = ['epoch', 'start_timestamp', 'lock_timestamp', 'close_timestamp', 'lock_price', 'close_price',
                         'total_amount', 'bull_amount', 'bear_amount', 'position']
 
+    assert player_bet_df.columns.to_list() == bet_amount_df.columns.to_list(), \
+        "Columns of both dataframes must be the same"
+
     players_list = player_bet_df.columns.to_list()
 
     # Calculate metrics for each player
     for player in players_list:
         if player not in not_players_list:
-            # player_bet_df_temp = player_bet_df[[player, 'position']]
-            # player_bet_df_temp = player_bet_df_temp.dropna()
-            #
-            # # Get the number of bets
-            # total_bets = len(player_bet_df_temp[player])
-            #
-            # if total_bets == 0:
-            #     print(f"Player {player} has no bets")
-            #     continue
-            #
-            # # Get the number of winning bets (where both the player and the position are the same)
-            # winning_bets = len(player_bet_df_temp[player_bet_df_temp[player] == player_bet_df_temp['position']])
-            #
-            # win_ratio = winning_bets / total_bets
-            #
-            # # Calculate the total profit of the player
-            # # trades_data = create_trades_data(bet_amount_df, player_bet_df, player)
-            #
-            # total_profit = trades_data['profit'].sum()
-            # profit_per_bet = total_profit / total_bets
-
             player_bets = player_bet_df[player]
             player_bet_sizes = bet_amount_df[player]
 
@@ -72,9 +61,6 @@ if __name__ == "__main__":
     from utils import load_players_data
 
     player_bet_df, bet_amount_df = load_players_data(time_from_training, time_to_training)
-
-    # print datatypes of the bet_amount_df
-    # print(bet_amount_df.dtypes)
 
     players_win_ratio1 = get_players_metrics(player_bet_df, bet_amount_df)
 
