@@ -6,8 +6,26 @@ import numpy as np
 from utils import load_players_data
 
 
-def simulate(data_df: pd.DataFrame, prediction: pd.Series, bet_size: pd.Series, add_bet_to_pool: bool = True) ->\
-        pd.DataFrame:
+def copy_trade_player(player_bet_df: pd.DataFrame, bet_amount_df: pd.DataFrame, player_address: str) -> pd.DataFrame:
+    """
+    Copy all trades of a player in a given period of time
+    :param player_bet_df: Dataframe with player bets
+    :param bet_amount_df: Dataframe with player bet size
+    :param player_address: Address of the player to copy the trades of
+    :return: Dataframe with copied trades
+    """
+
+    player_bets = player_bet_df[player_address]
+    player_bet_sizes = bet_amount_df[player_address]
+
+    trading_data = simulate(player_bet_df[['epoch', 'position', 'bull_amount', 'bear_amount', 'total_amount']],
+                            player_bets, player_bet_sizes, add_bet_to_pool=True)
+
+    return trading_data
+
+
+def simulate(data_df: pd.DataFrame, prediction: pd.Series, bet_size: pd.Series,
+             add_bet_to_pool: bool = True) -> pd.DataFrame:
     """
     Simulate the bet game based on the prediction and bet_size
     :param data_df: Dataframe with the needed data, can be bet_amount_df or player_bet_df. Need only cols: epoch,
