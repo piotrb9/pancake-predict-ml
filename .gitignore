@@ -8,3 +8,4 @@
 /cache/
 *.xml
 /.idea/
+/src/test.py
