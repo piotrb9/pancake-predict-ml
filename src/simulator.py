@@ -46,12 +46,19 @@ def simulate(data_df: pd.DataFrame, prediction: pd.Series, bet_size: pd.Series,
     else:
         add_to_pool = data_df['bet_size']
 
+    # Change the labels: Bull -> 1 and Bear -> 0
+    data_df['prediction'] = np.where(data_df['prediction'] == 'Bull', 1, data_df['prediction'])
+    data_df['prediction'] = np.where(data_df['prediction'] == 'Bear', 0, data_df['prediction'])
+
+    data_df['position'] = np.where(data_df['position'] == 'Bull', 1, data_df['position'])
+    data_df['position'] = np.where(data_df['position'] == 'Bear', 0, data_df['position'])
+
     # Add CAKE tokens to the pool
-    data_df['bull_amount'] = np.where(data_df['prediction'] == 'Bull',
+    data_df['bull_amount'] = np.where(data_df['prediction'] == 1,
                                       data_df['bull_amount'] + add_to_pool,
                                       data_df['bull_amount'])
 
-    data_df['bear_amount'] = np.where(data_df['prediction'] == 'Bear',
+    data_df['bear_amount'] = np.where(data_df['prediction'] == 0,
                                       data_df['bear_amount'] + add_to_pool,
                                       data_df['bear_amount'])
 
@@ -68,7 +75,7 @@ def simulate(data_df: pd.DataFrame, prediction: pd.Series, bet_size: pd.Series,
 
     data_df['win'] = np.where(data_df['position'] == data_df['prediction'], 1, 0)
 
-    data_df['multiplier'] = np.where(data_df['position'] == 'Bull',
+    data_df['multiplier'] = np.where(data_df['position'] == 1,
                                      data_df['bull_multiplier'],
                                      data_df['bear_multiplier'])
 
