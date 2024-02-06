@@ -77,7 +77,7 @@ def simulate(data_df: pd.DataFrame, prediction: pd.Series, bet_size: pd.Series,
     data_df['profit'] = data_df['win'] * data_df['multiplier'] * data_df['bet_size'] - data_df['bet_size']
 
     # Pancake prediction v3 contract takes 3% of the profit
-    data_df['profit'] = data_df['profit'] * 0.97
+    data_df['profit'] = np.where(data_df['profit'] > 0, data_df['profit'] * 0.97, data_df['profit'])
 
     return data_df
 
