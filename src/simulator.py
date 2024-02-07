@@ -67,11 +67,11 @@ def simulate(data_df: pd.DataFrame, prediction: pd.Series, bet_size: pd.Series,
     # Calculate the multipliers, if the player bet on the winning position
     data_df['bull_multiplier'] = np.where(data_df['bull_amount'] > 0,
                                           data_df['total_amount'] / data_df['bull_amount'],
-                                          0)
+                                          1)
 
     data_df['bear_multiplier'] = np.where(data_df['bear_amount'] > 0,
                                           data_df['total_amount'] / data_df['bear_amount'],
-                                          0)
+                                          1)
 
     data_df['win'] = np.where(data_df['position'] == data_df['prediction'], 1, 0)
 
