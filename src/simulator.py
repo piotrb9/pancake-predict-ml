@@ -25,7 +25,7 @@ def copy_trade_player(player_bet_df: pd.DataFrame, bet_amount_df: pd.DataFrame, 
 
 
 def simulate(data_df: pd.DataFrame, prediction: pd.Series, bet_size: pd.Series,
-             add_bet_to_pool: bool = True) -> pd.DataFrame:
+             add_bet_to_pool: bool = True, min_multiplier: float = 0) -> pd.DataFrame:
     """
     Simulate the bet game based on the prediction and bet_size
     :param data_df: Dataframe with the needed data, can be bet_amount_df or player_bet_df. Need only cols: epoch,
@@ -34,6 +34,7 @@ def simulate(data_df: pd.DataFrame, prediction: pd.Series, bet_size: pd.Series,
     :param bet_size: Series with bet sizes (in CAKE tokens) for each epoch. 0 means no bet
     :param add_bet_to_pool: If True, add the bet to the pool, otherwise don't (When analyzing the players results, we
     don't want to add the bets to the pool, so set it to False)
+    :param min_multiplier: Minimum multiplier to bet. If the multiplier is below this value, don't bet
     :return: Dataframe with the simulation results (in CAKE tokens)
     """
 
@@ -82,6 +83,9 @@ def simulate(data_df: pd.DataFrame, prediction: pd.Series, bet_size: pd.Series,
     data_df['multiplier'] = np.where(data_df['position'] == 'House', 0, data_df['multiplier'])
 
     data_df['profit'] = data_df['win'] * data_df['multiplier'] * data_df['bet_size'] - data_df['bet_size']
+
+    # Do not place bets if the multiplier is below the min_multiplier
+    data_df['profit'] = np.where(data_df['multiplier'] < min_multiplier, 0, data_df['profit'])
 
     # Pancake prediction v3 contract takes 3% of the profit
     data_df['profit'] = np.where(data_df['profit'] > 0, data_df['profit'] * 0.97, data_df['profit'])
