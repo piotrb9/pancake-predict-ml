@@ -32,7 +32,7 @@ Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
 ## TODO
-Check the [TODO](https://github.com/piotrb9/wallet-analyzer/blob/master/TODO.md) to see the list.
+Check the [TODO](https://github.com/piotrb9/pancake-predict-ml/blob/master/TODO.md) to see the list.
 
 
 ## License
