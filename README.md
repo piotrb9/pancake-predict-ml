@@ -26,12 +26,14 @@ The notebook can be used as a standalone project, with all the needed code insid
 <img src="https://icon.icepanel.io/Technology/svg/Python.svg" width="100" height="100">
 <img src="https://icon.icepanel.io/Technology/svg/PyCharm.svg" width="100" height="100">
 
-
-
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
+
+## TODO
+Check the [TODO](https://github.com/piotrb9/pancake-predict-ml/blob/master/TODO.md) to see the list.
+
 
 ## License
 
